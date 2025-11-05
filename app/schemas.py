@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
-from typing import Dict
+from typing import Dict, Map, Any
 
+# This class remains the same, it's the 24-feature input
 class SensorStatsRequest(BaseModel):
     X_mean: float = Field(...)
     Y_mean: float = Field(...)
@@ -30,8 +31,36 @@ class SensorStatsRequest(BaseModel):
     HR_max: float = Field(...)
     TEMP_max: float = Field(...)
 
-class PredictionResult(BaseModel):
-    isSuccessful: bool
-    prediction: int
+
+# --- NEW RESPONSE MODELS ---
+# These replace the old 'PredictionResult'
+
+class MLPredictionData(BaseModel):
+    """
+    Corresponds to the nested 'prediction' object.
+    Matches the Java 'MLPredictionData' DTO.
+    """
+    stress_state: str
+    stress_level: str
+    description: str
+    severity: int
     confidence: float
-    features_received: Dict[str, float]
+    probabilities: Dict[str, float]
+
+class MLApiResponse(BaseModel):
+    """
+    Corresponds to the top-level response.
+    Matches the Java 'MLApiResponse' DTO.
+    """
+    success: bool
+    prediction: MLPredictionData = None
+    features: Dict[str, float] = None
+    error: str = None
+    timestamp: str
+
+# This old class is no longer used by the main endpoint
+# class PredictionResult(BaseModel):
+#     isSuccessful: bool
+#     prediction: int
+#     confidence: float
+#     features_received: Dict[str, float]
