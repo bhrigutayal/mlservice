@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Dict, Map, Any
+from typing import Dict
 
 # This class remains the same, it's the 24-feature input
 class SensorStatsRequest(BaseModel):
